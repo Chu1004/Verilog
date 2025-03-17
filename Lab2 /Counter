@@ -1,0 +1,51 @@
+module Counter(
+    // Input signals
+	clk, 
+	rst_n, 
+	in_valid,  
+	in_num,  
+    // Output signals
+	out_num
+);
+//---------------------------------------------------------------------
+//   INPUT AND OUTPUT DECLARATION                         
+//---------------------------------------------------------------------
+input clk, rst_n;
+input in_valid; 
+input [4:0] in_num;
+output logic [4:0] out_num;
+
+//---------------------------------------------------------------------
+//   LOGIC DECLARATION
+//---------------------------------------------------------------------
+logic[4:0] c_tar;
+logic plus;
+//---------------------------------------------------------------------
+//   Your DESIGN                        
+//---------------------------------------------------------------------
+
+
+always @(posedge clk or negedge rst_n) begin
+	if(!rst_n) begin
+		out_num <= 0;
+		c_tar <= 0;
+		plus <= 0;
+	end
+	else begin
+		if(in_valid) begin
+			c_tar <= in_num;
+			out_num <= 0;
+			plus <= 1;
+		end
+		else if(plus) begin
+			if(out_num < c_tar)
+				out_num <= out_num +1;
+			
+			else
+				plus <= 0;
+		end
+		
+	end
+end
+
+endmodule
