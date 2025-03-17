@@ -1,0 +1,65 @@
+module Seq(
+	// Input signals
+	clk,
+	rst_n,
+	in_valid,
+	card,
+	// Output signals
+	win,
+	lose,
+	sum
+);
+
+//---------------------------------------------------------------------
+//   INPUT AND OUTPUT DECLARATION                         
+//---------------------------------------------------------------------
+input clk, rst_n, in_valid;
+input [3:0] card;
+output logic win, lose;
+output logic [4:0] sum;
+
+//---------------------------------------------------------------------
+//   REG AND WIRE DECLARATION                         
+//---------------------------------------------------------------------
+
+reg [4:0] card_value;
+reg [4:0] next_sum;
+//---------------------------------------------------------------------
+//   YOUR DESIGN                        
+//---------------------------------------------------------------------
+
+always_comb begin 
+	if (card >= 1 && card <= 10)
+		card_value = card;
+	else
+		card_value = 10;
+	next_sum = sum+card_value;
+end
+
+always @(posedge clk or negedge rst_n) begin
+	if (!rst_n) begin
+		sum <= 0;
+		win <= 0;
+		lose <= 0;
+	end 
+	else if(in_valid) begin
+		win <= 0;
+		lose <= 0; 
+
+		if (win | lose) begin
+			sum<= 0;
+			win <= 0;
+			lose <= 0; 
+		end	
+		else begin
+			sum <= next_sum;
+				
+			if (next_sum > 21)
+				lose <= 1;
+			else if (next_sum <= 21 && next_sum > 16)
+				win <= 1;
+		end
+	end
+end
+
+endmodule
